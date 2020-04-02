@@ -63,11 +63,13 @@ class UpsertOrder():
     def _create_order_from_pancake(self, body):
         order_id = None
         tracking_numbers = None
+        partner_id = None
         if 'service_partner' in body:
             order_id = body['service_partner']['order']['id']
 
         if 'partner' in body:
             tracking_numbers = body['partner']['extend_code']
+            partner_id = body['partner']['partner_id']
 
         full_address = body['shipping_address']['full_address']
         x = re.search('Thành phố *,', full_address)
@@ -89,7 +91,7 @@ class UpsertOrder():
             total_cod=body['cod'],
             status=body['status'],
             # status_str='',
-            partner_id=body.get('partner_id', None),
+            partner_id=partner_id,
             # partner_str='',
             status_updated_at=body['status_history'][0]['updated_at'],
             sale=body['status_history'][0]['name'],
