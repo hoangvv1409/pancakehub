@@ -4,7 +4,8 @@ import traceback
 from src.databases.connection import db_engine, bind_session
 from src.services import UpsertOrder, PancakeApi
 from src.databases.repositories import (
-    RawOrderRepository, ShopRepository
+    RawOrderRepository, ShopRepository,
+    OrderRepository, ItemRepository,
 )
 
 engine = db_engine(os.getenv('DATABASE_URI'))
@@ -12,9 +13,14 @@ session = bind_session(engine)
 
 shop_repo = ShopRepository(session)
 raw_order_repo = RawOrderRepository(session)
+order_repo = OrderRepository(session)
+item_repo = ItemRepository(session)
+
 
 upsert_order = UpsertOrder(
     raw_order_repository=raw_order_repo,
+    order_repository=order_repo,
+    item_repository=item_repo,
 )
 pancake_api = PancakeApi('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI0YWFhMTQzZS1iM2VjLTQ1YzUtOWQ2Ni01YmNlOTY2NDM1MGIiLCJpYXQiOjE1ODU2MzA4NTAsImZiX25hbWUiOiJWxakgSG_DoG5nIiwiZmJfaWQiOiIxMzY4Njg3MTk5ODY5NTMxIiwiZXhwIjoxNTkzNDA2ODUwfQ.qAPpFdfdZBOFQVqdk6lIbbfyrXVfFXXwbwzoYk4kfRo')
 
@@ -46,6 +52,7 @@ def _fetch_order(shop_id, page=1, page_size=100):
         except Exception as e:
             print(str(e))
             session.rollback()
+            import pdb; pdb.set_trace()
             traceback.print_exc()
 
     time.sleep(2)
