@@ -48,7 +48,7 @@ def _fetch_order(shop_id, page=1, page_size=100):
             session.rollback()
             traceback.print_exc()
 
-    time.sleep(1)
+    time.sleep(2)
 
     if result['page_number'] < result['total_pages']:
         _fetch_order(
