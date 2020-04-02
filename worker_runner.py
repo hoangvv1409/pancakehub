@@ -1,11 +1,12 @@
 import click
 from src.apps.fetchers import (
-    shop_hourly_fetcher
+    shop_hourly_fetcher, order_15min_fetcher,
 )
 
 
 workers = dict(
     shop_hourly_fetcher=shop_hourly_fetcher,
+    order_15min_fetcher=order_15min_fetcher,
 )
 
 
