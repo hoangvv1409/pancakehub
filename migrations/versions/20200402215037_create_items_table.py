@@ -20,6 +20,7 @@ def upgrade():
     op.create_table(
         'items',
         sa.Column('id', sa.Integer, primary_key=True),
+        sa.Column('pancake_id', sa.BigInteger, nullable=False, unique=True),
         sa.Column('pancake_order_id', sa.BigInteger, nullable=False),
         sa.Column('name', sa.String, nullable=False),
         sa.Column('variant', sa.String, nullable=False),
