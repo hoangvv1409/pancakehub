@@ -28,11 +28,16 @@ def fetch_order():
 
 
 def _fetch_order(shop_id, page=1, page_size=100):
-    result = pancake_api.list_order(
-        shop_id=shop_id,
-        page=page,
-        page_size=page_size,
-    )
+    try:
+        result = pancake_api.list_order(
+            shop_id=shop_id,
+            page=page,
+            page_size=page_size,
+        )
+    except Exception:
+        traceback.print_exc()
+        return
+
     for order in result['orders']:
         print(f'    Store order {order["id"]}')
         try:
@@ -43,7 +48,7 @@ def _fetch_order(shop_id, page=1, page_size=100):
             session.rollback()
             traceback.print_exc()
 
-        time.sleep(1)
+    time.sleep(1)
 
     if result['page_number'] < result['total_pages']:
         _fetch_order(
