@@ -14,7 +14,7 @@ def shop_hourly_fetcher():
 
 def order_15min_fetcher():
     fetch_order()
-    schedule.every(15).minutes.do(fetch_shop)
+    schedule.every(15).minutes.do(fetch_order)
     while True:
         schedule.run_pending()
         time.sleep(300)
