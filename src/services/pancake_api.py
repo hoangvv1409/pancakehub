@@ -22,6 +22,7 @@ class PancakeApi():
             page_size,
             page,
         )
+        url += '&option_sort=inserted_at_desc'
         response = self._get(url)
         if not response:
             return None
