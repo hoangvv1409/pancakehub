@@ -23,6 +23,7 @@ def upgrade():
         sa.Column('pancake_id', sa.BigInteger, nullable=False, unique=True),
         sa.Column('pancake_shop_id', sa.BigInteger, nullable=False),
         sa.Column('fb_page_id', sa.BigInteger, nullable=True),
+        sa.Column('display_id', sa.BigInteger, nullable=False),
         sa.Column(
             'inserted_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('order_id', sa.String, nullable=True),

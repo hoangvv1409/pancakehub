@@ -9,6 +9,7 @@ class OrderSchema(DeclarativeBase, Base, DateTimestamp):
     id = Column(Integer, primary_key=True)
     pancake_id = Column(BigInteger, nullable=False, unique=True)
     pancake_shop_id = Column(BigInteger, nullable=False)
+    display_id = Column(BigInteger, nullable=False)
     fb_page_id = Column(BigInteger, nullable=True)
     inserted_at = Column(DateTime(timezone=True), nullable=True)
     order_id = Column(String, nullable=True)
