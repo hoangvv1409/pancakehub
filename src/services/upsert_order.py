@@ -64,22 +64,25 @@ class UpsertOrder():
         order_id = None
         tracking_numbers = None
         partner_id = None
-        if 'service_partner' in body:
-            order_id = body['service_partner']['order']['id']
+        partner_str = None
 
         if 'partner' in body:
-            tracking_numbers = body['partner']['extend_code']
-            partner_id = body['partner']['partner_id']
+            partner = body['partner']
+            tracking_numbers = partner.get('extend_code', None)
+            partner_id = partner['partner_id']
+            partner_str = self._get_partner_str(partner_id)
+            order_id = self._get_order_id(partner)
 
         full_address = body['shipping_address']['full_address']
-        x = re.search('Thành phố *,', full_address)
-        if x:
-            import pdb; pdb.set_trace()
-            pass
+        # x = re.search('Thành phố *,', full_address)
+        # if x:
+        #     import pdb; pdb.set_trace()
+        #     pass
 
         return dict(
             pancake_id=body['id'],
             pancake_shop_id=body['shop_id'],
+            display_id=body['display_id'],
             fb_page_id=body['page_id'],
             inserted_at=body['inserted_at'],
             order_id=order_id,
@@ -90,9 +93,9 @@ class UpsertOrder():
             district_id=body['shipping_address']['district_id'],
             total_cod=body['cod'],
             status=body['status'],
-            # status_str='',
+            status_str=self._get_status_str(body['status']),
             partner_id=partner_id,
-            # partner_str='',
+            partner_str=partner_str,
             status_updated_at=body['status_history'][0]['updated_at'],
             sale=body['status_history'][0]['name'],
             tracking_numbers=tracking_numbers,
@@ -109,3 +112,29 @@ class UpsertOrder():
             variant=variant if variant else name,
             quantity=item['quantity'],
         )
+
+    def _get_partner_str(self, partner_id):
+        return {
+            0: 'SNP',
+            1: 'GHTK',
+            8: 'SPL',
+        }.get(partner_id, None)
+
+    def _get_status_str(self, status):
+        return {
+            0: 'Mới',
+            1: 'Đã xác nhận',
+            2: 'Đã gửi hàng',
+            3: 'Đã nhận',
+            4: 'Đang hoàn',
+            5: 'Đã hoàn',
+            6: 'Đã huỷ',
+        }.get(status, None)
+
+    def _get_order_id(self, partner):
+        if 'service_partner' not in partner:
+            return
+        if partner['service_partner'] is None:
+            return
+
+        return partner['service_partner']['order']['id']
