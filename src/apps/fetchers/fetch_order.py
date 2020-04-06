@@ -25,15 +25,18 @@ upsert_order = UpsertOrder(
 pancake_api = PancakeApi('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI0YWFhMTQzZS1iM2VjLTQ1YzUtOWQ2Ni01YmNlOTY2NDM1MGIiLCJpYXQiOjE1ODU2MzA4NTAsImZiX25hbWUiOiJWxakgSG_DoG5nIiwiZmJfaWQiOiIxMzY4Njg3MTk5ODY5NTMxIiwiZXhwIjoxNTkzNDA2ODUwfQ.qAPpFdfdZBOFQVqdk6lIbbfyrXVfFXXwbwzoYk4kfRo')
 
 
-def fetch_order():
+def fetch_order(max_page=-1):
     shops = shop_repo.find()
 
     for shop in shops:
         print(f'Fetch order from {shop.name}')
-        _fetch_order(shop.pancake_id)
+        _fetch_order(
+            shop_id=shop.pancake_id,
+            max_page=max_page,
+        )
 
 
-def _fetch_order(shop_id, page=1, page_size=100):
+def _fetch_order(shop_id, page=1, page_size=100, max_page=-1):
     try:
         result = pancake_api.list_order(
             shop_id=shop_id,
@@ -56,6 +59,9 @@ def _fetch_order(shop_id, page=1, page_size=100):
             traceback.print_exc()
 
     time.sleep(2)
+
+    if max_page > 0 and result['page_number'] == max_page:
+        return
 
     if result['page_number'] < result['total_pages']:
         _fetch_order(

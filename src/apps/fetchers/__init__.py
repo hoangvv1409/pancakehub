@@ -13,8 +13,10 @@ def shop_hourly_fetcher():
 
 
 def order_15min_fetcher():
-    fetch_order()
-    schedule.every(15).minutes.do(fetch_order)
+    max_page = 10
+
+    fetch_order(max_page)
+    schedule.every(15).minutes.do(lambda: fetch_order(max_page))
     while True:
         schedule.run_pending()
         time.sleep(300)
