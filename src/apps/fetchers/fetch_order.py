@@ -29,23 +29,26 @@ def fetch_order(max_page=-1):
     shops = shop_repo.find()
 
     for shop in shops:
-        print(f'Fetch order from {shop.name}')
         _fetch_order(
-            shop_id=shop.pancake_id,
+            shop=shop,
             max_page=max_page,
         )
 
 
-def _fetch_order(shop_id, page=1, page_size=100, max_page=-1):
+def _fetch_order(shop, page=1, page_size=100, max_page=-1):
     try:
         result = pancake_api.list_order(
-            shop_id=shop_id,
+            shop_id=shop.pancake_id,
             page=page,
             page_size=page_size,
         )
     except Exception:
         traceback.print_exc()
         return
+
+    page_number = result["page_number"]
+    total_pages = result["total_pages"]
+    print(f'Fetch order from {shop.name} {page_number}/{total_pages}')
 
     for order in result['orders']:
         print(f'    Store order {order["id"]}')
@@ -60,12 +63,13 @@ def _fetch_order(shop_id, page=1, page_size=100, max_page=-1):
 
     time.sleep(2)
 
-    if max_page > 0 and result['page_number'] == max_page:
+    if max_page > 0 and page_number >= max_page:
         return
 
-    if result['page_number'] < result['total_pages']:
+    if page_number < total_pages:
         _fetch_order(
-            shop_id=shop_id,
+            shop=shop,
             page=page+1,
-            page_size=page_size
+            page_size=page_size,
+            max_page=max_page,
         )
