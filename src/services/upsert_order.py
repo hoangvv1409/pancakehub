@@ -96,7 +96,7 @@ class UpsertOrder():
             status_str=self._get_status_str(body['status']),
             partner_id=partner_id,
             partner_str=partner_str,
-            status_updated_at=body['status_history'][0]['updated_at'],
+            status_updated_at=body['last_update_status_at'],
             sale=body['status_history'][0]['name'],
             tracking_numbers=tracking_numbers,
         )
