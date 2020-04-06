@@ -20,3 +20,7 @@ def order_15min_fetcher():
     while True:
         schedule.run_pending()
         time.sleep(300)
+
+
+def all_order_fetcher():
+    fetch_order()
