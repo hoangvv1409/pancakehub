@@ -14,7 +14,7 @@ class OrderSchema(DeclarativeBase, Base, DateTimestamp):
     inserted_at = Column(DateTime(timezone=True), nullable=True)
     order_id = Column(String, nullable=True)
     full_name = Column(String, nullable=False)
-    phone_number = Column(String, nullable=False)
+    phone_number = Column(String, nullable=True)
     full_address = Column(String, nullable=False)
     city = Column(String, nullable=True)
     province_id = Column(Integer, nullable=False)

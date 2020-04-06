@@ -28,7 +28,7 @@ def upgrade():
             'inserted_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('order_id', sa.String, nullable=True),
         sa.Column('full_name', sa.String, nullable=False),
-        sa.Column('phone_number', sa.String, nullable=False),
+        sa.Column('phone_number', sa.String, nullable=True),
         sa.Column('full_address', sa.String, nullable=False),
         sa.Column('city', sa.String, nullable=True),
         sa.Column('province_id', sa.Integer, nullable=True),
