@@ -42,6 +42,14 @@ def upgrade():
             'status_updated_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('sale', sa.String, nullable=True),
         sa.Column('tracking_numbers', sa.String, nullable=True),
+
+        sa.Column(
+            'request_fulfilled_at', sa.DateTime(timezone=True), nullable=True),
+        sa.Column('pick_money', sa.Integer, nullable=True),
+        sa.Column('ship_money', sa.Integer, nullable=True),
+        sa.Column('deliver_status', sa.String, nullable=True),
+        sa.Column('is_freeship', sa.Integer, nullable=True),
+
         sa.Column('created_at', sa.TIMESTAMP, nullable=True),
         sa.Column('updated_at', sa.TIMESTAMP, nullable=True),
     )

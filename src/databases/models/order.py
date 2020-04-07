@@ -1,4 +1,7 @@
-from sqlalchemy import Integer, String, Column, BigInteger, DateTime
+from sqlalchemy import (
+    Integer, String, Column,
+    BigInteger, DateTime,
+)
 from .common.date_timestamp import DateTimestamp
 from .base import DeclarativeBase, Base
 
@@ -27,3 +30,9 @@ class OrderSchema(DeclarativeBase, Base, DateTimestamp):
     status_updated_at = Column(DateTime(timezone=True), nullable=True)
     sale = Column(String, nullable=True)
     tracking_numbers = Column(String, nullable=True)
+
+    request_fulfilled_at = Column(DateTime(timezone=True), nullable=True)
+    pick_money = Column(Integer, nullable=True)
+    ship_money = Column(Integer, nullable=True)
+    deliver_status = Column(String, nullable=True)
+    is_freeship = Column(Integer, nullable=True)

@@ -2,3 +2,4 @@
 from .pancake_api import PancakeApi
 from .upsert_shop import UpsertShop
 from .upsert_order import UpsertOrder
+from .ghtk_api import GHTKApi
