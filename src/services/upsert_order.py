@@ -1,6 +1,3 @@
-import re
-
-
 class UpsertOrder():
     def __init__(self, raw_order_repository, order_repository,
                  item_repository):
@@ -65,6 +62,11 @@ class UpsertOrder():
         tracking_numbers = None
         partner_id = None
         partner_str = None
+        request_fulfilled_at = None
+        pick_money = None
+        ship_money = None
+        deliver_status = None
+        is_freeship = None
 
         if 'partner' in body:
             partner = body['partner']
@@ -73,11 +75,14 @@ class UpsertOrder():
             partner_str = self._get_partner_str(partner_id)
             order_id = self._get_order_id(partner)
 
+        if 'ghtk' in body and body['ghtk'] is not None:
+            request_fulfilled_at = body['ghtk']['created']
+            pick_money = int(body['ghtk']['pick_money'])
+            ship_money = int(body['ghtk']['ship_money'])
+            deliver_status = body['ghtk']['status_text']
+            is_freeship = int(body['ghtk']['is_freeship'])
+
         full_address = body['shipping_address']['full_address']
-        # x = re.search('Thành phố *,', full_address)
-        # if x:
-        #     import pdb; pdb.set_trace()
-        #     pass
 
         return dict(
             pancake_id=body['id'],
@@ -99,6 +104,11 @@ class UpsertOrder():
             status_updated_at=body['last_update_status_at'],
             sale=body['status_history'][0]['name'],
             tracking_numbers=tracking_numbers,
+            request_fulfilled_at=request_fulfilled_at,
+            pick_money=pick_money,
+            ship_money=ship_money,
+            deliver_status=deliver_status,
+            is_freeship=is_freeship,
         )
 
     def _create_item_from_pancake(self, pancake_order_id, item):

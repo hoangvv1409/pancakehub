@@ -2,7 +2,7 @@ import os
 import time
 import traceback
 from src.databases.connection import db_engine, bind_session
-from src.services import UpsertOrder, PancakeApi
+from src.services import UpsertOrder, PancakeApi, GHTKApi
 from src.databases.repositories import (
     RawOrderRepository, ShopRepository,
     OrderRepository, ItemRepository,
@@ -23,6 +23,7 @@ upsert_order = UpsertOrder(
     item_repository=item_repo,
 )
 pancake_api = PancakeApi('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI0YWFhMTQzZS1iM2VjLTQ1YzUtOWQ2Ni01YmNlOTY2NDM1MGIiLCJpYXQiOjE1ODU2MzA4NTAsImZiX25hbWUiOiJWxakgSG_DoG5nIiwiZmJfaWQiOiIxMzY4Njg3MTk5ODY5NTMxIiwiZXhwIjoxNTkzNDA2ODUwfQ.qAPpFdfdZBOFQVqdk6lIbbfyrXVfFXXwbwzoYk4kfRo')
+ghtk_api = GHTKApi('C424f45770F03F8D0ab87A2c1dB81c0D0505A6Ec')
 
 
 def fetch_order(max_page=-1):
@@ -52,6 +53,14 @@ def _fetch_order(shop, page=1, page_size=100, max_page=-1):
 
     for order in result['orders']:
         print(f'    Store order {order["id"]}')
+        if 'partner' in order:
+            tracking_number = order['partner'].get('extend_code', None)
+            if not tracking_number:
+                return
+
+            data = ghtk_api.get_order(tracking_number)
+            order['ghtk'] = data
+
         try:
             upsert_order.execute(order)
             session.commit()
