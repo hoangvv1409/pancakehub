@@ -50,16 +50,13 @@ def _fetch_order(shop, page=1, page_size=100, max_page=-1):
     page_number = result["page_number"]
     total_pages = result["total_pages"]
     print(f'Fetch order from {shop.name} {page_number}/{total_pages}')
-
-    for order in result['orders']:
-        print(f'    Store order {order["id"]}')
+    for idx, order in enumerate(result['orders']):
+        print(f'    Store order {idx+1}/ {order["id"]}')
         if 'partner' in order:
             tracking_number = order['partner'].get('extend_code', None)
-            if not tracking_number:
-                return
-
-            data = ghtk_api.get_order(tracking_number)
-            order['ghtk'] = data
+            if tracking_number:
+                data = ghtk_api.get_order(tracking_number)
+                order['ghtk'] = data
 
         try:
             upsert_order.execute(order)
@@ -75,6 +72,7 @@ def _fetch_order(shop, page=1, page_size=100, max_page=-1):
     if max_page > 0 and page_number >= max_page:
         return
 
+    import pdb; pdb.set_trace()
     if page_number < total_pages:
         _fetch_order(
             shop=shop,
