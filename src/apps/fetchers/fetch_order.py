@@ -72,7 +72,6 @@ def _fetch_order(shop, page=1, page_size=100, max_page=-1):
     if max_page > 0 and page_number >= max_page:
         return
 
-    import pdb; pdb.set_trace()
     if page_number < total_pages:
         _fetch_order(
             shop=shop,
